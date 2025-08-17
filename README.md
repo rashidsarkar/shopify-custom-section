@@ -8,14 +8,14 @@ Each section includes a preview image, its name, and a quick button to open the 
 ## 🖼 Section Previews
 
 ### 1. Custom Image Text Section
-![Custom Image Text Section](./custom-image-text/assets/preview.png)
+![Custom Image Text Section](./custom-text-image-text/assets/preview.png)
 
-[➡️ Go to Code](./custom-image-text)
+[➡️ Go to Code](./custom-text-image-text)
 
 ---
 
 ### 2. Split Layout Banner
-![Split Layout Banner](./images/split-layout-banner.png)
+![Split Layout Banner](./custom-image-text/assets/preview.png)
 
 [➡️ Go to Code](./sections/split-layout-banner)
 
