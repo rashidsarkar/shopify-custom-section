@@ -37,6 +37,9 @@
     <!-- TEXT COLUMN -->
     <div class="custom-image-text__content">
       <div class="custom-image-text__box">
+        <div class="custom-imageText_main">
+
+       
         {% if section.settings.kicker != blank %}
           <p class="custom-image-text__kicker">{{ section.settings.kicker }}</p>
         {% endif %}
@@ -52,11 +55,35 @@
         {% if section.settings.btn_label != blank and section.settings.btn_link != blank %}
           <a class="custom-image-text__btn" href="{{ section.settings.btn_link }}">{{ section.settings.btn_label }}</a>
         {% endif %}
+         </div>
       </div>
     </div>
   </div>
 
   <style>
+    {% comment %} 
+    =====>>>>  for teame css 
+    p.custom-image-text__kicker {
+}
+h1.custom-image-text__title {
+  color: #34bf49;
+}
+p.custom-image-text__body {
+  text-transform: uppercase;
+  margin: 7px 0 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #263238;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6);
+}
+a.custom-image-text__btn {
+  border-radius: 25px !important;
+}
+.custom-image-text__box {
+  align-items: center !important;
+}
+    ====<<<end>>>
+    {% endcomment %}
     /* === LAYOUT: split with dynamic image width & vertical centering === */
     #shopify-section-{{ section.id }} .custom-image-text__inner{
       display: grid;
