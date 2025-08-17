@@ -1,0 +1,251 @@
+<section
+  id="shopify-section-{{ section.id }}"
+  class="custom-image-text custom-image-text--side-{{ section.settings.content_side }} custom-image-text--h-{{ section.settings.text_h_align }} custom-image-text--v-{{ section.settings.text_v_align }}"
+  aria-label="{{ section.settings.title | escape }}"
+  style="
+    --min-h: {{ section.settings.min_height }}vh;
+    --img-w: {{ section.settings.image_width | default: 50 }}%;
+    --img-fit: {{ section.settings.image_fit | default: 'cover' }};
+  "
+>
+  <div class="custom-image-text__inner">
+    <!-- IMAGE COLUMN -->
+    <div class="custom-image-text__image">
+      {% assign desktop_img = section.settings.image %}
+      {% assign mobile_img = section.settings.image_mobile | default: section.settings.image %}
+
+      {% if desktop_img %}
+        <picture>
+          {% if mobile_img %}
+            <source media="(max-width: 768px)" srcset="{{ mobile_img | image_url: width: 1400 }}">
+          {% endif %}
+          {{ desktop_img | image_url: width: 2000 | image_tag:
+            loading: 'lazy',
+            class: 'custom-image-text__img',
+            sizes: '(min-width: 768px) 50vw, 100vw',
+            widths: '640,960,1200,1600,2000',
+            alt: section.settings.title | escape
+          }}
+        </picture>
+      {% else %}
+        <div class="custom-image-text__img placeholder">
+          {{ 'image' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- TEXT COLUMN -->
+    <div class="custom-image-text__content">
+      <div class="custom-image-text__box">
+        {% if section.settings.kicker != blank %}
+          <p class="custom-image-text__kicker">{{ section.settings.kicker }}</p>
+        {% endif %}
+
+        {% if section.settings.title != blank %}
+          <h1 class="custom-image-text__title">{{ section.settings.title }}</h1>
+        {% endif %}
+
+        {% if section.settings.body != blank %}
+          <p class="custom-image-text__body">{{ section.settings.body }}</p>
+        {% endif %}
+
+        {% if section.settings.btn_label != blank and section.settings.btn_link != blank %}
+          <a class="custom-image-text__btn" href="{{ section.settings.btn_link }}">{{ section.settings.btn_label }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* === LAYOUT: split with dynamic image width & vertical centering === */
+    #shopify-section-{{ section.id }} .custom-image-text__inner{
+      display: grid;
+      grid-template-columns: minmax(0, var(--img-w, 50%)) minmax(0, calc(100% - var(--img-w, 50%)));
+      min-height: var(--min-h, 60vh);
+      align-items: center;      /* centers both columns vertically */
+      justify-items: stretch;   /* columns fill available width */
+      gap: 0;
+    }
+
+    /* Flip order if image side = right */
+    #shopify-section-{{ section.id }}.custom-image-text--side-right .custom-image-text__image { order: 2; }
+    #shopify-section-{{ section.id }}.custom-image-text--side-right .custom-image-text__content { order: 1; }
+
+    /* IMAGE COLUMN (center the image inside, keep natural ratio) */
+    #shopify-section-{{ section.id }} .custom-image-text__image{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;      /* vertical center inside column */
+      justify-content: center;  /* horizontal center inside column */
+      overflow: hidden;
+    }
+    #shopify-section-{{ section.id }} .custom-image-text__img{
+      display: block;
+      width: 100%;
+      height: auto;                     /* no distortion */
+      object-fit: var(--img-fit, cover);
+      background: {% if section.settings.image_fit == 'contain' %}#f6f6f6{% else %}transparent{% endif %};
+    }
+
+    /* TEXT COLUMN (vertically centered; horizontal alignment controlled by classes below) */
+    #shopify-section-{{ section.id }} .custom-image-text__content{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;      /* vertical center */
+      justify-content: flex-start; /* let box alignment decide text alignment */
+      padding: clamp(20px, 5vw, 60px);
+    }
+    #shopify-section-{{ section.id }} .custom-image-text__box{
+      width: 100%;
+      max-width: 640px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 1.2vw, 16px);
+    }
+
+    /* VERTICAL alignment options for content area (top/middle/bottom) */
+    #shopify-section-{{ section.id }}.custom-image-text--v-top    .custom-image-text__content { align-items: flex-start; }
+    #shopify-section-{{ section.id }}.custom-image-text--v-middle .custom-image-text__content { align-items: center; }
+    #shopify-section-{{ section.id }}.custom-image-text--v-bottom .custom-image-text__content { align-items: flex-end; }
+
+    /* HORIZONTAL text alignment inside the box */
+    #shopify-section-{{ section.id }}.custom-image-text--h-left  .custom-image-text__box { text-align: left;  align-items: flex-start; }
+    #shopify-section-{{ section.id }}.custom-image-text--h-center.custom-image-text .custom-image-text__box,
+    #shopify-section-{{ section.id }}.custom-image-text--h-center .custom-image-text__box { text-align: center; align-items: center; }
+    #shopify-section-{{ section.id }}.custom-image-text--h-right .custom-image-text__box { text-align: right; align-items: flex-end; }
+
+    /* TYPOGRAPHY & BUTTON (uses your existing color settings) */
+    #shopify-section-{{ section.id }} .custom-image-text__kicker{
+      margin: 0;
+      color: {{ section.settings.kicker_color }};
+      font-size: clamp(14px, 1.6vw, 18px);
+      font-weight: 500;
+      font-style: italic;
+    }
+    #shopify-section-{{ section.id }} .custom-image-text__title{
+      margin: 0;
+      color: {{ section.settings.title_color }};
+      font-weight: 800;
+      line-height: 1.05;
+      font-size: clamp(28px, 6vw, 72px);
+      text-transform: uppercase;
+    }
+    #shopify-section-{{ section.id }} .custom-image-text__body{
+      margin: 0 0 clamp(12px, 2vw, 20px);
+      color: {{ section.settings.body_color }};
+      font-size: clamp(14px, 1.8vw, 20px);
+      line-height: 1.6;
+      max-width: 75ch;
+    }
+    #shopify-section-{{ section.id }} .custom-image-text__btn{
+      padding: 12px 24px;
+      background: {{ section.settings.btn_bg }};
+      color: {{ section.settings.btn_text }};
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 8px;
+      text-transform: uppercase;
+      font-size: clamp(12px, 1.2vw, 14px);
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+    }
+
+    /* MOBILE: stack image then text; image stays natural ratio */
+    @media (max-width: 768px){
+      #shopify-section-{{ section.id }} .custom-image-text__inner{
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      #shopify-section-{{ section.id }} .custom-image-text__image   { order: 1 !important; }
+      #shopify-section-{{ section.id }} .custom-image-text__content { order: 2 !important; padding: 24px; }
+      #shopify-section-{{ section.id }} .custom-image-text__box { align-items: center; text-align: center; }
+      #shopify-section-{{ section.id }} .custom-image-text__img { width: 100%; height: auto; }
+    }
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Custom-image-text",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Desktop Background image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile Image (optional)" },
+
+    { "type": "range", "id": "min_height", "label": "Section height (vh)", "min": 30, "max": 100, "step": 5, "default": 60 },
+
+    { "type": "range", "id": "image_width", "label": "Image width (desktop %)", "min": 30, "max": 70, "step": 1, "default": 50 },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit (desktop)",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover (may crop edges)" },
+        { "value": "contain", "label": "Contain (no crop, may show padding)" }
+      ]
+    },
+
+    {
+      "type": "select",
+      "id": "content_side",
+      "label": "Text area side",
+      "default": "left",
+      "options": [
+        { "value": "left",  "label": "Image left, text right" },
+        { "value": "right", "label": "Image right, text left" }
+      ]
+    },
+
+    { "type": "text",  "id": "kicker",       "label": "Kicker text", "default": "New puppy or kitten?" },
+    { "type": "color", "id": "kicker_color", "label": "Kicker color", "default": "#ffffff" },
+
+    { "type": "text",  "id": "title",        "label": "Title", "default": "FIND" },
+    { "type": "color", "id": "title_color",  "label": "Title color", "default": "#ffffff" },
+
+    { "type": "text",  "id": "body",         "label": "Body text", "default": "Everything to welcome them home!" },
+    { "type": "color", "id": "body_color",   "label": "Body color", "default": "#ffffff" },
+
+    { "type": "text",  "id": "btn_label",    "label": "Button label", "default": "Shop now" },
+    { "type": "url",   "id": "btn_link",     "label": "Button link" },
+    { "type": "color", "id": "btn_bg",       "label": "Button background", "default": "#2BBBAD" },
+    { "type": "color", "id": "btn_text",     "label": "Button text", "default": "#ffffff" },
+
+    {
+      "type": "select",
+      "id": "text_h_align",
+      "label": "Text horizontal alignment (inside box)",
+      "default": "left",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_v_align",
+      "label": "Text vertical alignment",
+      "default": "middle",
+      "options": [
+        { "value": "top",    "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+
+    /* Legacy overlay controls kept for compatibility (not used now) */
+    { "type": "color", "id": "overlay_color",   "label": "Overlay color", "default": "#000000" },
+    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 1, "step": 0.1, "label": "Overlay opacity", "default": 0.3 },
+    { "type": "range", "id": "content_width",   "label": "Text area width (%)", "min": 30, "max": 70, "step": 5, "default": 50 }
+  ],
+  "presets": [
+    { "name": "Custom-image-text" }
+  ]
+}
+{% endschema %}
