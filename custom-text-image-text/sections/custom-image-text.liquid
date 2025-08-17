@@ -1,251 +1,308 @@
-<section
-  id="shopify-section-{{ section.id }}"
-  class="custom-image-text custom-image-text--side-{{ section.settings.content_side }} custom-image-text--h-{{ section.settings.text_h_align }} custom-image-text--v-{{ section.settings.text_v_align }}"
-  aria-label="{{ section.settings.title | escape }}"
-  style="
-    --min-h: {{ section.settings.min_height }}vh;
-    --img-w: {{ section.settings.image_width | default: 50 }}%;
-    --img-fit: {{ section.settings.image_fit | default: 'cover' }};
-  "
->
-  <div class="custom-image-text__inner">
-    <!-- IMAGE COLUMN -->
-    <div class="custom-image-text__image">
-      {% assign desktop_img = section.settings.image %}
-      {% assign mobile_img = section.settings.image_mobile | default: section.settings.image %}
+{% comment %}
+  Section: Custom Text — Image — Text (3 columns)
+  - Desktop: Left text / Center image / Right text
+  - Mobile: Choose stack order
+  - Dynamic alignments for left & right text blocks
+  - Custom colors and buttons per side
+{% endcomment %}
 
-      {% if desktop_img %}
-        <picture>
-          {% if mobile_img %}
-            <source media="(max-width: 768px)" srcset="{{ mobile_img | image_url: width: 1400 }}">
-          {% endif %}
-          {{ desktop_img | image_url: width: 2000 | image_tag:
-            loading: 'lazy',
-            class: 'custom-image-text__img',
-            sizes: '(min-width: 768px) 50vw, 100vw',
-            widths: '640,960,1200,1600,2000',
-            alt: section.settings.title | escape
-          }}
-        </picture>
-      {% else %}
-        <div class="custom-image-text__img placeholder">
-          {{ 'image' | placeholder_svg_tag }}
-        </div>
-      {% endif %}
+<section id="t3-{{ section.id }}" class="t3"
+  style="
+    --t3-bg: {{ section.settings.bg_color }};
+    --t3-text: {{ section.settings.text_color }};
+    --t3-btn-bg-left: {{ section.settings.btn_bg_left }};
+    --t3-btn-text-left: {{ section.settings.btn_text_left }};
+    --t3-btn-bg-right: {{ section.settings.btn_bg_right }};
+    --t3-btn-text-right: {{ section.settings.btn_text_right }};
+    --t3-gap: clamp(16px, 3vw, 40px);
+    --t3-img-radius: {{ section.settings.image_radius }}px;
+    --t3-img-maxw: {{ section.settings.image_max_width }}px;
+  "
+  aria-label="{{ section.settings.title_left | escape }}"
+>
+  <div class="t3__inner t3--mobile-{{ section.settings.mobile_order }}">
+    {%- assign img = section.settings.image -%}
+    {%- assign img_m = section.settings.image_mobile | default: img -%}
+
+    <!-- LEFT TEXT -->
+    <div class="t3__col t3__left t3--h-{{ section.settings.h_align_left }} t3--v-{{ section.settings.v_align_left }}">
+      {%- if section.settings.kicker_left != blank -%}
+        <p class="t3__kicker">{{ section.settings.kicker_left }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.title_left != blank -%}
+        <h2 class="t3__title">{{ section.settings.title_left }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.body_left != blank -%}
+        <div class="t3__text rte">{{ section.settings.body_left }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.price_left != blank -%}
+        <div class="t3__price">{{ section.settings.price_left }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.btn_label_left != blank and section.settings.btn_link_left != blank -%}
+        <a class="t3__btn t3__btn--left" href="{{ section.settings.btn_link_left }}" {% if section.settings.btn_newtab_left %}target="_blank" rel="noopener"{% endif %}>
+          {{ section.settings.btn_label_left }}
+        </a>
+      {%- endif -%}
     </div>
 
-    <!-- TEXT COLUMN -->
-    <div class="custom-image-text__content">
-      <div class="custom-image-text__box">
-        {% if section.settings.kicker != blank %}
-          <p class="custom-image-text__kicker">{{ section.settings.kicker }}</p>
-        {% endif %}
+    <!-- CENTER IMAGE -->
+    <div class="t3__col t3__media">
+      {%- if img != blank -%}
+        <picture>
+          <source media="(max-width: 749px)" srcset="{{ img_m | image_url: width: 1200 }}">
+          <img class="t3__img"
+               src="{{ img | image_url: width: 2000 }}"
+               alt="{{ img.alt | escape }}"
+               loading="lazy"
+               width="{{ img.width }}"
+               height="{{ img.height }}">
+        </picture>
+      {%- else -%}
+        <div class="t3__img--placeholder" role="img" aria-label="Image placeholder"></div>
+      {%- endif -%}
+    </div>
 
-        {% if section.settings.title != blank %}
-          <h1 class="custom-image-text__title">{{ section.settings.title }}</h1>
-        {% endif %}
+    <!-- RIGHT TEXT -->
+    <div class="t3__col t3__right t3--h-{{ section.settings.h_align_right }} t3--v-{{ section.settings.v_align_right }}">
+      {%- if section.settings.kicker_right != blank -%}
+        <p class="t3__kicker">{{ section.settings.kicker_right }}</p>
+      {%- endif -%}
 
-        {% if section.settings.body != blank %}
-          <p class="custom-image-text__body">{{ section.settings.body }}</p>
-        {% endif %}
+      {%- if section.settings.title_right != blank -%}
+        <h2 class="t3__title">{{ section.settings.title_right }}</h2>
+      {%- endif -%}
 
-        {% if section.settings.btn_label != blank and section.settings.btn_link != blank %}
-          <a class="custom-image-text__btn" href="{{ section.settings.btn_link }}">{{ section.settings.btn_label }}</a>
-        {% endif %}
-      </div>
+      {%- if section.settings.body_right != blank -%}
+        <div class="t3__text rte RongilaPriceRight">{{ section.settings.body_right }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.price_right != blank -%}
+        <div class="t3__price RongilaPriceRight">{{ section.settings.price_right }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.btn_label_right != blank and section.settings.btn_link_right != blank -%}
+        <a class="t3__btn t3__btn--right" href="{{ section.settings.btn_link_right }}" {% if section.settings.btn_newtab_right %}target="_blank" rel="noopener"{% endif %}>
+          {{ section.settings.btn_label_right }}
+        </a>
+      {%- endif -%}
     </div>
   </div>
 
   <style>
-    /* === LAYOUT: split with dynamic image width & vertical centering === */
-    #shopify-section-{{ section.id }} .custom-image-text__inner{
+    #t3-{{ section.id }}{
+      background: var(--t3-bg);
+      color: var(--t3-text);
+    }
+    #t3-{{ section.id }} .t3__inner{
+      width: min(1300px, 94vw);
+      margin-inline: auto;
       display: grid;
-      grid-template-columns: minmax(0, var(--img-w, 50%)) minmax(0, calc(100% - var(--img-w, 50%)));
-      min-height: var(--min-h, 60vh);
-      align-items: center;      /* centers both columns vertically */
-      justify-items: stretch;   /* columns fill available width */
-      gap: 0;
+      gap: var(--t3-gap);
+      padding: clamp(24px, 5vw, 64px) 0;
+      grid-template-columns: 1fr;
+      align-items: stretch;
     }
 
-    /* Flip order if image side = right */
-    #shopify-section-{{ section.id }}.custom-image-text--side-right .custom-image-text__image { order: 2; }
-    #shopify-section-{{ section.id }}.custom-image-text--side-right .custom-image-text__content { order: 1; }
-
-    /* IMAGE COLUMN (center the image inside, keep natural ratio) */
-    #shopify-section-{{ section.id }} .custom-image-text__image{
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;      /* vertical center inside column */
-      justify-content: center;  /* horizontal center inside column */
-      overflow: hidden;
+    /* Desktop: three columns */
+    @media (min-width: 750px){
+      #t3-{{ section.id }} .t3__inner{
+        grid-template-columns: 1fr minmax(280px, var(--t3-img-maxw)) 1fr;
+      }
     }
-    #shopify-section-{{ section.id }} .custom-image-text__img{
+
+    /* Mobile stack order */
+    @media (max-width: 749px){
+      #t3-{{ section.id }} .t3--mobile-image_first .t3__media{ order: 0; }
+      #t3-{{ section.id }} .t3--mobile-image_first .t3__left{ order: 1; }
+      #t3-{{ section.id }} .t3--mobile-image_first .t3__right{ order: 2; }
+
+      #t3-{{ section.id }} .t3--mobile-left_first .t3__left{ order: 0; }
+      #t3-{{ section.id }} .t3--mobile-left_first .t3__media{ order: 1; }
+      #t3-{{ section.id }} .t3--mobile-left_first .t3__right{ order: 2; }
+
+      #t3-{{ section.id }} .t3--mobile-right_first .t3__right{ order: 0; }
+      #t3-{{ section.id }} .t3--mobile-right_first .t3__media{ order: 1; }
+      #t3-{{ section.id }} .t3--mobile-right_first .t3__left{ order: 2; }
+    }
+
+    /* Media */
+    #t3-{{ section.id }} .t3__media{
+      display: grid;
+      place-items: center;
+    }
+    #t3-{{ section.id }} .t3__img{
       display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--t3-img-radius);
+    }
+    #t3-{{ section.id }} .t3__img--placeholder{
       width: 100%;
-      height: auto;                     /* no distortion */
-      object-fit: var(--img-fit, cover);
-      background: {% if section.settings.image_fit == 'contain' %}#f6f6f6{% else %}transparent{% endif %};
+      min-height: 300px;
+      background: #f3f3f3;
+      border-radius: var(--t3-img-radius);
     }
 
-    /* TEXT COLUMN (vertically centered; horizontal alignment controlled by classes below) */
-    #shopify-section-{{ section.id }} .custom-image-text__content{
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;      /* vertical center */
-      justify-content: flex-start; /* let box alignment decide text alignment */
-      padding: clamp(20px, 5vw, 60px);
+    /* Text columns */
+    #t3-{{ section.id }} .t3__col{
+      display: grid;
+      gap: clamp(8px, 2vw, 16px);
+      align-content: start;
     }
-    #shopify-section-{{ section.id }} .custom-image-text__box{
-      width: 100%;
-      max-width: 640px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: clamp(8px, 1.2vw, 16px);
-    }
+    #t3-{{ section.id }} .t3--h-left{ justify-items: start; text-align: left; }
+    #t3-{{ section.id }} .t3--h-center{ justify-items: center; text-align: center; }
+    #t3-{{ section.id }} .t3--h-right{ justify-items: end; text-align: right; }
 
-    /* VERTICAL alignment options for content area (top/middle/bottom) */
-    #shopify-section-{{ section.id }}.custom-image-text--v-top    .custom-image-text__content { align-items: flex-start; }
-    #shopify-section-{{ section.id }}.custom-image-text--v-middle .custom-image-text__content { align-items: center; }
-    #shopify-section-{{ section.id }}.custom-image-text--v-bottom .custom-image-text__content { align-items: flex-end; }
+    #t3-{{ section.id }} .t3--v-top{ align-self: start; }
+    #t3-{{ section.id }} .t3--v-middle{ align-self: center; }
+    #t3-{{ section.id }} .t3--v-bottom{ align-self: end; }
 
-    /* HORIZONTAL text alignment inside the box */
-    #shopify-section-{{ section.id }}.custom-image-text--h-left  .custom-image-text__box { text-align: left;  align-items: flex-start; }
-    #shopify-section-{{ section.id }}.custom-image-text--h-center.custom-image-text .custom-image-text__box,
-    #shopify-section-{{ section.id }}.custom-image-text--h-center .custom-image-text__box { text-align: center; align-items: center; }
-    #shopify-section-{{ section.id }}.custom-image-text--h-right .custom-image-text__box { text-align: right; align-items: flex-end; }
-
-    /* TYPOGRAPHY & BUTTON (uses your existing color settings) */
-    #shopify-section-{{ section.id }} .custom-image-text__kicker{
-      margin: 0;
-      color: {{ section.settings.kicker_color }};
-      font-size: clamp(14px, 1.6vw, 18px);
-      font-weight: 500;
-      font-style: italic;
-    }
-    #shopify-section-{{ section.id }} .custom-image-text__title{
-      margin: 0;
-      color: {{ section.settings.title_color }};
-      font-weight: 800;
-      line-height: 1.05;
-      font-size: clamp(28px, 6vw, 72px);
+    #t3-{{ section.id }} .t3__kicker{
+      opacity: .8;
+      letter-spacing: .06em;
       text-transform: uppercase;
+      font-size: clamp(12px, 1.8vw, 13px);
     }
-    #shopify-section-{{ section.id }} .custom-image-text__body{
-      margin: 0 0 clamp(12px, 2vw, 20px);
-      color: {{ section.settings.body_color }};
-      font-size: clamp(14px, 1.8vw, 20px);
-      line-height: 1.6;
-      max-width: 75ch;
+    #t3-{{ section.id }} .t3__title{
+      font-size: clamp(26px, 4.6vw, 44px);
+      line-height: 1.08;
+      margin: 0;
+      font-weight: 700;
     }
-    #shopify-section-{{ section.id }} .custom-image-text__btn{
-      padding: 12px 24px;
-      background: {{ section.settings.btn_bg }};
-      color: {{ section.settings.btn_text }};
+    #t3-{{ section.id }} .t3__text{
+      font-size: clamp(14px, 2.2vw, 16px);
+      opacity: .9;
+    }
+    #t3-{{ section.id }} .t3__price{
+      font-size: clamp(20px, 3.2vw, 28px);
+      font-weight: 700;
+    }
+
+    #t3-{{ section.id }} .t3__btn{
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: {{ section.settings.btn_radius }}px;
       text-decoration: none;
       font-weight: 700;
-      border-radius: 8px;
-      text-transform: uppercase;
-      font-size: clamp(12px, 1.2vw, 14px);
-      letter-spacing: .04em;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
+      transition: transform .2s ease, opacity .2s ease;
     }
-
-    /* MOBILE: stack image then text; image stays natural ratio */
-    @media (max-width: 768px){
-      #shopify-section-{{ section.id }} .custom-image-text__inner{
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
-      #shopify-section-{{ section.id }} .custom-image-text__image   { order: 1 !important; }
-      #shopify-section-{{ section.id }} .custom-image-text__content { order: 2 !important; padding: 24px; }
-      #shopify-section-{{ section.id }} .custom-image-text__box { align-items: center; text-align: center; }
-      #shopify-section-{{ section.id }} .custom-image-text__img { width: 100%; height: auto; }
+    #t3-{{ section.id }} .t3__btn--left{
+      background: var(--t3-btn-bg-left);
+      color: var(--t3-btn-text-left);
+    }
+    #t3-{{ section.id }} .t3__btn--right{
+      background: var(--t3-btn-bg-right);
+      color: var(--t3-btn-text-right);
+    }
+    #t3-{{ section.id }} .t3__btn:hover{
+      transform: translateY(-1px) scale(1.02);
+      opacity: .95;
     }
   </style>
 </section>
 
 {% schema %}
 {
-  "name": "Custom-image-text",
+  "name": "custom-text-image-text",
   "settings": [
-    { "type": "image_picker", "id": "image", "label": "Desktop Background image" },
-    { "type": "image_picker", "id": "image_mobile", "label": "Mobile Image (optional)" },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Global text color", "default": "#1f2937" },
 
-    { "type": "range", "id": "min_height", "label": "Section height (vh)", "min": 30, "max": 100, "step": 5, "default": 60 },
+    { "type": "image_picker", "id": "image", "label": "Center image (desktop)" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Center image (mobile, optional)" },
+    { "type": "range", "id": "image_radius", "label": "Image corner radius", "min": 0, "max": 40, "step": 1, "default": 0 },
+    { "type": "range", "id": "image_max_width", "label": "Image max width (desktop px)", "min": 280, "max": 900, "step": 10, "default": 640 },
 
-    { "type": "range", "id": "image_width", "label": "Image width (desktop %)", "min": 30, "max": 70, "step": 1, "default": 50 },
     {
       "type": "select",
-      "id": "image_fit",
-      "label": "Image fit (desktop)",
-      "default": "cover",
+      "id": "mobile_order",
+      "label": "Mobile stack order",
+      "default": "image_first",
       "options": [
-        { "value": "cover", "label": "Cover (may crop edges)" },
-        { "value": "contain", "label": "Contain (no crop, may show padding)" }
+        { "value": "image_first", "label": "Image → Left text → Right text" },
+        { "value": "left_first", "label": "Left text → Image → Right text" },
+        { "value": "right_first", "label": "Right text → Image → Left text" }
       ]
     },
 
-    {
-      "type": "select",
-      "id": "content_side",
-      "label": "Text area side",
-      "default": "left",
-      "options": [
-        { "value": "left",  "label": "Image left, text right" },
-        { "value": "right", "label": "Image right, text left" }
-      ]
-    },
+    /* LEFT TEXT */
+    { "type": "text", "id": "kicker_left", "label": "Left kicker", "default": "kicker_left" },
+    { "type": "text", "id": "title_left", "label": "Left title", "default": "ANDREW JAMES<br>4 DAY MEAL<br>AUTOMATIC…" },
+    { "type": "richtext", "id": "body_left", "label": "Left body", "default": "<p>Why Are Cats Afraid of Cucumbers? Let us be your assistants in making a nice present for your bel…</p>" },
+    { "type": "text", "id": "price_left", "label": "Left price (optional)", "default": "price_left" },
 
-    { "type": "text",  "id": "kicker",       "label": "Kicker text", "default": "New puppy or kitten?" },
-    { "type": "color", "id": "kicker_color", "label": "Kicker color", "default": "#ffffff" },
-
-    { "type": "text",  "id": "title",        "label": "Title", "default": "FIND" },
-    { "type": "color", "id": "title_color",  "label": "Title color", "default": "#ffffff" },
-
-    { "type": "text",  "id": "body",         "label": "Body text", "default": "Everything to welcome them home!" },
-    { "type": "color", "id": "body_color",   "label": "Body color", "default": "#ffffff" },
-
-    { "type": "text",  "id": "btn_label",    "label": "Button label", "default": "Shop now" },
-    { "type": "url",   "id": "btn_link",     "label": "Button link" },
-    { "type": "color", "id": "btn_bg",       "label": "Button background", "default": "#2BBBAD" },
-    { "type": "color", "id": "btn_text",     "label": "Button text", "default": "#ffffff" },
+    { "type": "text", "id": "btn_label_left", "label": "Left button label", "default": "Choose Variant" },
+    { "type": "url", "id": "btn_link_left", "label": "Left button link" },
+    { "type": "checkbox", "id": "btn_newtab_left", "label": "Open left button in new tab", "default": false },
+    { "type": "color", "id": "btn_bg_left", "label": "Left button background", "default": "#3fc1aa" },
+    { "type": "color", "id": "btn_text_left", "label": "Left button text", "default": "#ffffff" },
 
     {
       "type": "select",
-      "id": "text_h_align",
-      "label": "Text horizontal alignment (inside box)",
+      "id": "h_align_left",
+      "label": "Left horizontal align",
       "default": "left",
       "options": [
-        { "value": "left",   "label": "Left" },
+        { "value": "left", "label": "Left" },
         { "value": "center", "label": "Center" },
-        { "value": "right",  "label": "Right" }
+        { "value": "right", "label": "Right" }
       ]
     },
     {
       "type": "select",
-      "id": "text_v_align",
-      "label": "Text vertical alignment",
+      "id": "v_align_left",
+      "label": "Left vertical align",
       "default": "middle",
       "options": [
-        { "value": "top",    "label": "Top" },
+        { "value": "top", "label": "Top" },
         { "value": "middle", "label": "Middle" },
         { "value": "bottom", "label": "Bottom" }
       ]
     },
 
-    /* Legacy overlay controls kept for compatibility (not used now) */
-    { "type": "color", "id": "overlay_color",   "label": "Overlay color", "default": "#000000" },
-    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 1, "step": 0.1, "label": "Overlay opacity", "default": 0.3 },
-    { "type": "range", "id": "content_width",   "label": "Text area width (%)", "min": 30, "max": 70, "step": 5, "default": 50 }
+    /* RIGHT TEXT */
+    { "type": "text", "id": "kicker_right", "label": "Right kicker", "default": "kicker_right" },
+    { "type": "text", "id": "title_right", "label": "Right title", "default": "$26.00" },
+    { "type": "richtext", "id": "body_right", "label": "Right body", "default": "<p></p>" },
+    { "type": "text", "id": "price_right", "label": "Right price (optional)", "default": "price_right" },
+
+    { "type": "text", "id": "btn_label_right", "label": "Right button label", "default": "Choose Variant" },
+    { "type": "url", "id": "btn_link_right", "label": "Right button link" },
+    { "type": "checkbox", "id": "btn_newtab_right", "label": "Open right button in new tab", "default": false },
+    { "type": "color", "id": "btn_bg_right", "label": "Right button background", "default": "#3fc1aa" },
+    { "type": "color", "id": "btn_text_right", "label": "Right button text", "default": "#ffffff" },
+
+    {
+      "type": "select",
+      "id": "h_align_right",
+      "label": "Right horizontal align",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "v_align_right",
+      "label": "Right vertical align",
+      "default": "middle",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+
+    { "type": "range", "id": "btn_radius", "label": "Button corner radius", "min": 0, "max": 32, "step": 1, "default": 10 }
   ],
   "presets": [
-    { "name": "Custom-image-text" }
+    { "name": "custom-text-image-text" }
   ]
 }
 {% endschema %}
