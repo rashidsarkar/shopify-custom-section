@@ -10,7 +10,7 @@ Each section includes a preview image, its name, and a quick button to open the 
 ### 1. Custom Image Text Section
 ![Custom Image Text Section](./custom-image-text/assets/preview.png)
 
-[➡️ Go to Code](./sections/custom-image-text)
+[➡️ Go to Code](./custom-image-text/sections/custom-image-text.liquid)
 
 ---
 
