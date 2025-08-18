@@ -30,7 +30,7 @@ Each section includes a preview image, its name, and a quick button to open the 
 
 ## 🚀 How to Use
 1. Copy the section file into your Shopify theme's `/sections/` folder.  
-2. Add the section to a page using the Shopify theme editor.  
+2. Add the section to a page using the Shopify theme editor.  .
 3. Customize using the schema settings provided.
 
 ---
