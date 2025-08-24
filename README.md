@@ -1,7 +1,7 @@
 # 📂 Shopify Custom Sections Collection
 
 This repository contains my custom Shopify sections.  
-Each section includes a preview image, its name, and a quick button to open the related folder/code.
+Each section includes a preview image, its name, and a quick button to open the related folder/code..
 
 ---
 
